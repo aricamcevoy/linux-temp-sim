@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <ctime>
 #include <thread>
@@ -6,6 +7,8 @@
 
 int  main() {
    std::srand(std::time(nullptr));
+
+   std::ofstream logFile("temp_log.txt");
 
    const int sampleWindow = 5;
    float samples[sampleWindow] = {0};
@@ -27,10 +30,13 @@ int  main() {
 
       float avg =  sum / count;
 
-      std::cout << "Current: " << tempF << " F | Avg(" << count << "): " << avg << " F\n";
+      logFile << "Current: " << tempF << " F | Avg(" << count << "): " << avg << " F\n";
+
+      logFile.flush();
 
       std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
+   logFile.close();
    return 0;
 }

@@ -1,0 +1,5 @@
+Current: 72.8 F | Avg(1): 72.8 F
+Current: 68.8 F | Avg(2): 70.8 F
+Current: 70.9 F | Avg(3): 70.8333 F
+Current: 67.3 F | Avg(4): 69.95 F
+Current: 71.9 F | Avg(5): 70.34 F
