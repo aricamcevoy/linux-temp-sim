@@ -4,11 +4,13 @@
 #include <ctime>
 #include <thread>
 #include <chrono>
+#include <iomanip>
 
 int  main() {
    std::srand(std::time(nullptr));
 
-   std::ofstream logFile("temp_log.txt");
+   std::ofstream logFile("temp_log.csv");
+   logFile << "timestamp,current_temp_f,average_temp_f\n";
 
    const int sampleWindow = 5;
    float samples[sampleWindow] = {0};
@@ -30,7 +32,12 @@ int  main() {
 
       float avg =  sum / count;
 
-      logFile << "Current: " << tempF << " F | Avg(" << count << "): " << avg << " F\n";
+      auto now = std::time(nullptr);
+
+      logFile << std::put_time(std::localtime(&now), "%Y-%m-%d %H:%M:%S") 
+            << ", " << tempF 
+            << ", " << avg 
+            << "\n";
 
       logFile.flush();
 
