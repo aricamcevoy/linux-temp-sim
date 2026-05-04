@@ -5,12 +5,19 @@
 #include <thread>
 #include <chrono>
 #include <iomanip>
+#include <filesystem>
 
 int  main() {
    std::srand(std::time(nullptr));
 
-   std::ofstream logFile("temp_log.csv");
-   logFile << "timestamp,current_temp_f,average_temp_f\n";
+   const std::string filename = "temp_log.csv";
+   bool exists = std::filesystem::exists(filename);
+
+   std::ofstream logFile(filename, std::ios::app);
+
+   if (!exists) {
+      logFile << "timestamp,current_temp_f,average_temp_f\n";
+   }
 
    const int sampleWindow = 5;
    float samples[sampleWindow] = {0};
