@@ -6,6 +6,7 @@
 #include <thread>
 #include <chrono>
 #include <filesystem>
+#include <mutex>
 
 float currentTemp = 0.0;
 float avgTemp = 0.0;
@@ -15,11 +16,17 @@ float samples[sampleWindow] = {0};
 int sampleIndex = 0;
 int count = 0;
 
+std::mutex dataMutex;
+
 void sensorTask() {
    while(true) {
-      currentTemp = readTemp();
+      float temp = readTemp();
 
-      updateRollingAverage(currentTemp, samples, sampleWindow, sampleIndex, count, avgTemp);
+      {
+         std::lock_guard<std::mutex>lock(dataMutex);
+         currentTemp = temp;
+         updateRollingAverage(temp, samples, sampleWindow, sampleIndex, count, avgTemp);
+      }
 
       std::this_thread::sleep_for(std::chrono::seconds(1));
    }
@@ -27,7 +34,15 @@ void sensorTask() {
 
 void displayTask() {
    while(true) {
-      displayStatus(currentTemp, avgTemp);
+      float tempCopy, avgCopy;
+
+      {
+         std::lock_guard<std::mutex>lock(dataMutex);
+         tempCopy = currentTemp;
+         avgCopy = avgTemp;
+      }
+
+      displayStatus(tempCopy, avgCopy);
 
       std::this_thread::sleep_for(std::chrono::seconds(2));
    }
@@ -35,7 +50,15 @@ void displayTask() {
 
 void loggerTask(std::ofstream &logFile) {
    while(true) {
-      logTemp(logFile, currentTemp, avgTemp);
+      float tempCopy, avgCopy;
+
+      {
+         std::lock_guard<std::mutex>lock(dataMutex);
+         tempCopy = currentTemp;
+         avgCopy = avgTemp;
+      }
+
+      logTemp(logFile, tempCopy, avgCopy);
 
       std::this_thread::sleep_for(std::chrono::seconds(3));
    }
