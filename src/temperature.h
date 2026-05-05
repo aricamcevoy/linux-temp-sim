@@ -5,7 +5,7 @@
 
 float readTemp();
 
-void updateRollingAverage(float temp, float samples[], int sampleWindow, int &index, int &count, float &avg);
+void updateRollingAverage(float temp, float samples[], int sampleWindow, int &sampleIndex, int &count, float &avg);
 
 void displayStatus(float temp, float avg);
 

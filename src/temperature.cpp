@@ -9,9 +9,9 @@ float readTemp() {
    return 70.0 + ((std::rand() % 100) - 50) / 10.0;
 }
 
-void updateRollingAverage(float temp, float samples[],  int sampleWindow, int &index, int &count, float &avg) {
-   samples[index] = temp;
-   index = (index + 1) % sampleWindow;
+void updateRollingAverage(float temp, float samples[],  int sampleWindow, int &sampleIndex, int &count, float &avg) {
+   samples[sampleIndex] = temp;
+   sampleIndex = (sampleIndex + 1) % sampleWindow;
 
    if (count < sampleWindow) {
       count++;
